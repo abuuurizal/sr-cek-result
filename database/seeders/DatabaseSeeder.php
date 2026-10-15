@@ -17,19 +17,25 @@ class DatabaseSeeder extends Seeder
         $this->call(RoleSeeder::class);
 
         // Create Super Admin user
-        $superAdmin = User::factory()->create([
-            'name' => 'Super Admin',
-            'email' => 'superadmin@gmail.com',
-            'password' => Hash::make('password'),
-        ]);
+        $superAdmin = User::firstOrCreate(
+            ['email' => 'superadmin@gmail.com'],
+            [
+                'name' => 'Super Admin',
+                'password' => Hash::make('password'),
+                'email_verified_at' => now(),
+            ]
+        );
         $superAdmin->assignRole('super-admin');
 
         // Create Admin user
-        $admin = User::factory()->create([
-            'name' => 'Admin',
-            'email' => 'admin@gmail.com',
-            'password' => Hash::make('password'),
-        ]);
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@gmail.com'],
+            [
+                'name' => 'Admin',
+                'password' => Hash::make('password'),
+                'email_verified_at' => now(),
+            ]
+        );
         $admin->assignRole('admin');
     }
 }

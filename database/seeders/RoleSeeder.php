@@ -27,15 +27,15 @@ class RoleSeeder extends Seeder
         ];
 
         foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission]);
+            Permission::firstOrCreate(['name' => $permission]);
         }
 
         // Create roles and assign permissions
-        $superAdmin = Role::create(['name' => 'super-admin']);
+        $superAdmin = Role::firstOrCreate(['name' => 'super-admin']);
         // super-admin gets all permissions (also bypassed via Gate::before)
-        $superAdmin->givePermissionTo($permissions);
+        $superAdmin->syncPermissions($permissions);
 
-        $admin = Role::create(['name' => 'admin']);
-        $admin->givePermissionTo(['menu.dashboard']);
+        $admin = Role::firstOrCreate(['name' => 'admin']);
+        $admin->syncPermissions(['menu.dashboard']);
     }
 }
