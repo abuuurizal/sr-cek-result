@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="robots" content="noindex, nofollow">
 
-    <title>{{ $title ?? config('app.name', 'Demo Cek Result Live') }}</title>
+    <title>{{ $title ?? config('app.name', 'Cek Result Live') }}</title>
 
     <!-- Favicon -->
     <link rel="icon" href="{{ isset($site_settings->favicon_path) ? asset('storage/' . $site_settings->favicon_path) : asset('favicon.ico') }}">
