@@ -79,7 +79,7 @@ new #[Layout('layouts.guest')] class extends Component {
         </div>
     @endif
 
-    <form wire:submit="register" method="POST">
+    <form wire:submit="register">
         <!-- Name -->
         <div class="mb-4">
             <label for="name" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">{{ __('Full Name') }}</label>

@@ -49,6 +49,9 @@ jobs:
             echo "🔗 Memastikan symbolic link storage terhubung..."
             php artisan storage:link || true
 
+            echo "📦 Memastikan assets Livewire terpasang..."
+            php artisan livewire:publish --assets || true
+
             echo "⚡ Mengoptimalkan cache Laravel..."
             php artisan optimize:clear
             php artisan config:cache

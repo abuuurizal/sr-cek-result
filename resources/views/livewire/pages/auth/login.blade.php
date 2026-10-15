@@ -70,7 +70,7 @@ new #[Layout('layouts.guest')] class extends Component {
         </div>
     @endif
 
-    <form wire:submit="login" method="POST">
+    <form wire:submit="login">
         <!-- Email Address -->
         <div class="mb-4">
             <label for="email" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">{{ __('Email') }}</label>
