@@ -41,6 +41,16 @@ Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () 
         Route::get('test-products/{productId}/edit', \App\Livewire\Admin\TestProducts\ProductForm::class)
             ->name('test-products.edit');
     });
+
+    // Events CRUD
+    Route::middleware('can:menu.events')->group(function () {
+        Route::get('events', \App\Livewire\Admin\Events\EventIndex::class)
+            ->name('events.index');
+        Route::get('events/create', \App\Livewire\Admin\Events\EventForm::class)
+            ->name('events.create');
+        Route::get('events/{participantId}/edit', \App\Livewire\Admin\Events\EventForm::class)
+            ->name('events.edit');
+    });
 });
 
 require __DIR__ . '/auth.php';
