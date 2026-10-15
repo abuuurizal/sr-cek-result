@@ -11,6 +11,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Percayai semua proxy (Cloudflare & Nginx aaPanel) agar HTTPS terdeteksi
+        $middleware->trustProxies(at: '*');
+
         $middleware->redirectTo(
             guests: '/login',
             users: '/admin',
