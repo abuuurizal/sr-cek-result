@@ -6,6 +6,9 @@
 *.md diff=markdown
 *.php diff=php
 
+# Tandai asset build sebagai binary agar git diff tidak berantakan dan line endings aman
+/public/build/** binary
+
 /.github export-ignore
 CHANGELOG.md export-ignore
 .styleci.yml export-ignore
