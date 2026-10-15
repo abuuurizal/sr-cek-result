@@ -1,0 +1,60 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy to VPS
+    runs-on: ubuntu-latest
+    steps:
+      - name: Execute Deployment on VPS
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.PROD_SERVER_IP }}
+          username: ${{ secrets.PROD_SERVER_USERNAME }}
+          key: ${{ secrets.PROD_SERVER_SSH_KEY }}
+          port: ${{ secrets.PROD_SERVER_PORT || 22 }}
+          script: |
+            # Tentukan direktori target project di VPS
+            TARGET_DIR="${{ secrets.PROD_DEPLOY_PATH || '/www/wwwroot/sr-cek-result' }}"
+
+            echo "🚀 Menuju ke direktori: $TARGET_DIR"
+            cd "$TARGET_DIR" || { echo "❌ Direktori $TARGET_DIR tidak ditemukan!"; exit 1; }
+
+            # Izinkan Git membaca repository meskipun owner-nya www
+            git config --global --add safe.directory "$TARGET_DIR"
+
+            echo "📥 Mengambil perubahan terbaru dari branch main..."
+            git checkout main
+            git pull origin main
+
+            # Izinkan Composer berjalan sebagai root/super user jika diperlukan
+            export COMPOSER_ALLOW_SUPERUSER=1
+
+            echo "📦 Menginstall dependensi Composer (Production)..."
+            composer install --no-dev --optimize-autoloader --no-interaction
+
+            echo "📦 Menginstall dependensi NPM dan Build Frontend Assets..."
+            npm install
+            npm run build
+
+            echo "🗄️ Menjalankan migrasi database..."
+            php artisan migrate --force
+
+            echo "🔗 Memastikan symbolic link storage terhubung..."
+            php artisan storage:link || true
+
+            echo "⚡ Mengoptimalkan cache Laravel..."
+            php artisan optimize:clear
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
+
+            echo "🔒 Mengatur hak akses kepemilikan file untuk Nginx (www:www)..."
+            chown -R www:www "$TARGET_DIR"
+            chmod -R 775 "$TARGET_DIR/storage" "$TARGET_DIR/bootstrap/cache"
+
+            echo "✅ Deployment ke Production berhasil diselesaikan!"
