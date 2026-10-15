@@ -113,7 +113,7 @@ new #[Layout('layouts.guest')] class extends Component {
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <x-lucide-lock class="h-4 w-4 text-slate-400" />
                 </div>
-                <input wire:model="password" id="password" :type="showPassword ? 'text' : 'password'" name="password" required
+                <input wire:model="password" id="password" type="password" :type="showPassword ? 'text' : 'password'" name="password" required
                     autocomplete="new-password"
                     class="block w-full pl-9 pr-9 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#4885d5] focus:border-[#4885d5] transition-all text-sm font-medium text-slate-900 dark:text-white dark:bg-slate-900 placeholder-slate-400"
                     placeholder="••••••••">
@@ -132,7 +132,7 @@ new #[Layout('layouts.guest')] class extends Component {
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <x-lucide-lock class="h-4 w-4 text-slate-400" />
                 </div>
-                <input wire:model="password_confirmation" id="password_confirmation" :type="showPasswordConfirm ? 'text' : 'password'" name="password_confirmation" required
+                <input wire:model="password_confirmation" id="password_confirmation" type="password" :type="showPasswordConfirm ? 'text' : 'password'" name="password_confirmation" required
                     autocomplete="new-password"
                     class="block w-full pl-9 pr-9 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#4885d5] focus:border-[#4885d5] transition-all text-sm font-medium text-slate-900 dark:text-white dark:bg-slate-900 placeholder-slate-400"
                     placeholder="••••••••">
