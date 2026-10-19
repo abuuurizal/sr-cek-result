@@ -1,4 +1,4 @@
-name: Deploy to Production
+name: Deploy to Production VPS
 
 on:
   push:
@@ -13,31 +13,31 @@ jobs:
       - name: Execute Deployment on VPS
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: ${{ secrets.PROD_SERVER_IP }}
-          username: ${{ secrets.PROD_SERVER_USERNAME }}
+          host: ${{ secrets.PROD_SERVER_IP || '103.178.175.46' }}
+          username: ${{ secrets.PROD_SERVER_USERNAME || 'root' }}
           key: ${{ secrets.PROD_SERVER_SSH_KEY }}
           port: ${{ secrets.PROD_SERVER_PORT || 22 }}
           script: |
-            # Berhenti jika ada perintah yang gagal (agar error tidak tersembunyi)
             set -e
 
-            # Tentukan direktori target project di VPS
             TARGET_DIR="${{ secrets.PROD_DEPLOY_PATH || '/www/wwwroot/demo-cek-result.solusina.id' }}"
 
             echo "🚀 Menuju ke direktori: $TARGET_DIR"
             cd "$TARGET_DIR"
 
-            # Izinkan Git membaca repository meskipun owner-nya www
             git config --global --add safe.directory "$TARGET_DIR"
 
             echo "📥 Mengambil perubahan terbaru dari branch main..."
-            git checkout main
-            git pull origin main
+            git fetch origin main
+            git reset --hard origin/main
+            git clean -fd -e .env -e storage
 
-            echo "📌 Commit aktif di server:"
-            git log -1 --oneline
+            echo "🔑 Memastikan konfigurasi SYNC_API_KEY di .env VPS..."
+            if [ -f .env ] && ! grep -q "SYNC_API_KEY" .env; then
+                echo "" >> .env
+                echo "SYNC_API_KEY=sr-sync-secret-key-2026" >> .env
+            fi
 
-            # Izinkan Composer berjalan sebagai root/super user jika diperlukan
             export COMPOSER_ALLOW_SUPERUSER=1
 
             echo "📦 Menginstall dependensi Composer (Production)..."
@@ -46,20 +46,14 @@ jobs:
             echo "🗄️ Menjalankan migrasi database..."
             php artisan migrate --force
 
-            echo "🔗 Memastikan symbolic link storage terhubung..."
-            php artisan storage:link || true
-
-            echo "📦 Memastikan assets Livewire terpasang..."
-            php artisan livewire:publish --assets || true
-
             echo "⚡ Mengoptimalkan cache Laravel..."
             php artisan optimize:clear
             php artisan config:cache
             php artisan route:cache
             php artisan view:cache
 
-            echo "🔒 Mengatur hak akses kepemilikan file untuk Nginx (www:www)..."
-            chown -R www:www "$TARGET_DIR"
-            chmod -R 775 "$TARGET_DIR/storage" "$TARGET_DIR/bootstrap/cache"
+            echo "🔒 Mengatur hak akses kepemilikan file..."
+            chown -R www:www "$TARGET_DIR" || true
+            chmod -R 775 storage bootstrap/cache || true
 
-            echo "✅ Deployment ke Production berhasil diselesaikan!"
+            echo "✅ Deployment cek-result-vps selesai dengan sukses!"

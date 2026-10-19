@@ -10,17 +10,10 @@ class Participant extends Model
     use HasFactory;
 
     /**
-     * The table associated with the model.
-     *
-     * @var string
+     * Nama tabel di database sesuai dengan skema MyLaps / local.
      */
     protected $table = 'paticipants';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'chip_code',
         'no_bib',
@@ -32,18 +25,34 @@ class Participant extends Model
         'pace',
         'gun_time',
         'chip_time',
+        'synced_at',
+    ];
+
+    protected $casts = [
+        'synced_at' => 'datetime',
     ];
 
     /**
-     * Status constants.
+     * Scope untuk pencarian (BIB atau Nama).
      */
-    public const STATUS_FINISHED = 'finished';
-    public const STATUS_DNS = 'dns';
-    public const STATUS_DNF = 'dnf';
+    public function scopeSearch($query, ?string $term)
+    {
+        if (empty($term)) {
+            return $query;
+        }
 
-    public const STATUS_OPTIONS = [
-        self::STATUS_FINISHED => 'Finished',
-        self::STATUS_DNS => 'DNS',
-        self::STATUS_DNF => 'DNF',
-    ];
+        return $query->where(function ($q) use ($term) {
+            $q->where('no_bib', 'like', "%{$term}%")
+              ->orWhere('nama_lengkap', 'like', "%{$term}%")
+              ->orWhere('chip_code', 'like', "%{$term}%");
+        });
+    }
+
+    /**
+     * Scope untuk peserta yang sudah finish.
+     */
+    public function scopeFinished($query)
+    {
+        return $query->where('status', 'finished');
+    }
 }
