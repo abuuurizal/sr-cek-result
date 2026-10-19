@@ -19,18 +19,18 @@ class CekResultWebController extends Controller
 
         $query = Participant::query();
 
-        if (!empty($search)) {
+        if (! empty($search)) {
             $query->search($search);
         }
 
-        if (!empty($kategori)) {
+        if (! empty($kategori)) {
             $query->where('kategori', $kategori);
         }
 
         $participants = $query->orderByRaw("CASE WHEN status = 'finished' AND chip_time IS NOT NULL THEN 0 ELSE 1 END")
             ->orderBy('chip_time', 'asc')
             ->orderBy('no_bib', 'asc')
-            ->paginate(20)
+            ->paginate(10)
             ->withQueryString();
 
         // Kategori unik untuk filter dropdown

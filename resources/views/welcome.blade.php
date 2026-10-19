@@ -89,33 +89,40 @@
     <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
 
         <!-- Stats Overview Cards -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-4 shadow-sm backdrop-blur">
-                <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Peserta</div>
-                <div class="text-2xl sm:text-3xl font-extrabold text-white mt-1">{{ number_format($stats['total']) }}</div>
-                <div class="text-xs text-slate-500 mt-1">Terdaftar di sistem</div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-8">
+            <div class="bg-slate-900/40 border border-slate-800/80 rounded-xl p-3.5 sm:p-4 hover:border-slate-700/70 transition">
+                <div class="text-xs font-medium text-slate-400">Total Peserta</div>
+                <div class="text-2xl font-bold tracking-tight text-white mt-1">{{ number_format($stats['total']) }}</div>
+                <div class="text-[11px] text-slate-500 mt-0.5">Terdaftar di sistem</div>
             </div>
 
-            <div class="bg-slate-900/70 border border-emerald-900/40 rounded-2xl p-4 shadow-sm backdrop-blur">
-                <div class="text-xs font-semibold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Finisher
+            <div class="bg-slate-900/40 border border-slate-800/80 rounded-xl p-3.5 sm:p-4 hover:border-slate-700/70 transition">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-medium text-slate-400">Finisher</span>
+                    <span class="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-400">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                        {{ $stats['total'] > 0 ? round(($stats['finished'] / $stats['total']) * 100) : 0 }}%
+                    </span>
                 </div>
-                <div class="text-2xl sm:text-3xl font-extrabold text-emerald-400 mt-1">{{ number_format($stats['finished']) }}</div>
-                <div class="text-xs text-slate-500 mt-1">Berhasil melewati finish</div>
+                <div class="text-2xl font-bold tracking-tight text-white mt-1">{{ number_format($stats['finished']) }}</div>
+                <div class="text-[11px] text-slate-500 mt-0.5">Melewati finish</div>
             </div>
 
-            <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-4 shadow-sm backdrop-blur">
-                <div class="text-xs font-semibold text-amber-400 uppercase tracking-wider">DNS / DNF</div>
-                <div class="text-2xl sm:text-3xl font-extrabold text-slate-200 mt-1">{{ number_format($stats['dns'] + $stats['dnf']) }}</div>
-                <div class="text-xs text-slate-500 mt-1">{{ $stats['dns'] }} DNS | {{ $stats['dnf'] }} DNF</div>
+            <div class="bg-slate-900/40 border border-slate-800/80 rounded-xl p-3.5 sm:p-4 hover:border-slate-700/70 transition">
+                <div class="text-xs font-medium text-slate-400">DNS / DNF</div>
+                <div class="text-2xl font-bold tracking-tight text-white mt-1">{{ number_format($stats['dns'] + $stats['dnf']) }}</div>
+                <div class="text-[11px] text-slate-500 mt-0.5">{{ $stats['dns'] }} DNS &middot; {{ $stats['dnf'] }} DNF</div>
             </div>
 
-            <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-4 shadow-sm backdrop-blur">
-                <div class="text-xs font-semibold text-cyan-400 uppercase tracking-wider">Sinkronisasi Terakhir</div>
-                <div class="text-sm font-semibold text-slate-200 mt-2 truncate font-mono">
-                    {{ $lastSync ? $lastSync->created_at->diffForHumans() : 'Belum ada sync' }}
+            <div class="bg-slate-900/40 border border-slate-800/80 rounded-xl p-3.5 sm:p-4 hover:border-slate-700/70 transition">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-medium text-slate-400">Sync Terakhir</span>
+                    <span class="w-1.5 h-1.5 rounded-full {{ $lastSync ? 'bg-cyan-400' : 'bg-slate-600' }}"></span>
                 </div>
-                <div class="text-xs text-slate-500 mt-1 truncate">
+                <div class="text-base sm:text-lg font-bold text-white mt-1 truncate" title="{{ $lastSync ? $lastSync->created_at->format('d M Y H:i:s') : 'Belum ada sync' }}">
+                    {{ $lastSync ? $lastSync->created_at->diffForHumans() : 'Belum sync' }}
+                </div>
+                <div class="text-[11px] text-slate-500 mt-0.5 truncate">
                     {{ $lastSync ? $lastSync->records_count . ' data batch' : 'Standby menerima push' }}
                 </div>
             </div>
