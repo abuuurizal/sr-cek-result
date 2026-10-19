@@ -71,24 +71,13 @@ class SyncReceiverController extends Controller
 
         DB::beginTransaction();
         try {
-            // Upsert berdasarkan kolom 'no_bib' yang unik
-            Participant::upsert(
-                $records,
-                ['no_bib'],
-                [
-                    'chip_code',
-                    'nama_lengkap',
-                    'gender',
-                    'kategori',
-                    'sub_kategori',
-                    'status',
-                    'pace',
-                    'gun_time',
-                    'chip_time',
-                    'synced_at',
-                    'updated_at',
-                ]
-            );
+            // Update jika nomor BIB sudah ada, atau buat baru jika belum ada (menjamin 1 BIB = 1 Row)
+            foreach ($records as $record) {
+                Participant::updateOrCreate(
+                    ['no_bib' => $record['no_bib']],
+                    $record
+                );
+            }
 
             // Catat log sinkronisasi
             SyncLog::create([
