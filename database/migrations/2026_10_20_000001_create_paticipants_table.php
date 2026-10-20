@@ -4,15 +4,17 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        if (!Schema::hasTable('paticipants')) {
+        if (! Schema::hasTable('paticipants')) {
             Schema::create('paticipants', function (Blueprint $table) {
                 $table->id();
+                $table->string('mylaps_code')->nullable()->index();
                 $table->string('chip_code')->nullable()->index();
                 $table->string('no_bib')->unique();
                 $table->string('nama_lengkap');
@@ -28,7 +30,10 @@ return new class extends Migration {
             });
         } else {
             Schema::table('paticipants', function (Blueprint $table) {
-                if (!Schema::hasColumn('paticipants', 'synced_at')) {
+                if (! Schema::hasColumn('paticipants', 'mylaps_code')) {
+                    $table->string('mylaps_code')->nullable()->after('id')->index();
+                }
+                if (! Schema::hasColumn('paticipants', 'synced_at')) {
                     $table->timestamp('synced_at')->nullable()->after('chip_time');
                 }
             });

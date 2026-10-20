@@ -47,13 +47,14 @@ class ParticipantApiController extends Controller
     public function show(string $identifier): JsonResponse
     {
         $participant = Participant::where('no_bib', $identifier)
+            ->orWhere('mylaps_code', $identifier)
             ->orWhere('chip_code', $identifier)
             ->first();
 
-        if (!$participant) {
+        if (! $participant) {
             return response()->json([
                 'success' => false,
-                'message' => "Peserta dengan nomor BIB / Chip '{$identifier}' tidak ditemukan.",
+                'message' => "Peserta dengan nomor BIB / MyLaps / Chip '{$identifier}' tidak ditemukan.",
             ], 404);
         }
 

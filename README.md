@@ -64,6 +64,7 @@ SYNC_API_KEY=sr-sync-secret-key-2026
   "participants": [
     {
       "no_bib": "7796",
+      "mylaps_code": "MYL-001",
       "chip_code": "E2801170",
       "nama_lengkap": "Budi Santoso",
       "gender": "Male",
@@ -76,6 +77,7 @@ SYNC_API_KEY=sr-sync-secret-key-2026
     },
     {
       "no_bib": "7797",
+      "mylaps_code": "MYL-002",
       "chip_code": "E2801171",
       "nama_lengkap": "Siti Aminah",
       "gender": "Female",

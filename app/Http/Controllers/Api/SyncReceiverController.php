@@ -25,6 +25,7 @@ class SyncReceiverController extends Controller
             'participants' => 'required|array|min:1',
             'participants.*.no_bib' => 'required|string|max:50',
             'participants.*.nama_lengkap' => 'required|string|max:255',
+            'participants.*.mylaps_code' => 'nullable|string|max:50',
             'participants.*.chip_code' => 'nullable|string|max:50',
             'participants.*.gender' => 'nullable|string|max:20',
             'participants.*.kategori' => 'nullable|string|max:50',
@@ -54,6 +55,7 @@ class SyncReceiverController extends Controller
         foreach ($participantsData as $item) {
             $records[] = [
                 'no_bib' => trim((string) $item['no_bib']),
+                'mylaps_code' => isset($item['mylaps_code']) ? trim((string) $item['mylaps_code']) : null,
                 'chip_code' => isset($item['chip_code']) ? trim((string) $item['chip_code']) : null,
                 'nama_lengkap' => trim((string) $item['nama_lengkap']),
                 'gender' => $item['gender'] ?? null,
@@ -109,12 +111,12 @@ class SyncReceiverController extends Controller
                 'records_count' => count($records),
                 'ip_address' => $request->ip(),
                 'status' => 'failed',
-                'message' => 'Sync failed: ' . $e->getMessage(),
+                'message' => 'Sync failed: '.$e->getMessage(),
             ]);
 
             return response()->json([
                 'success' => false,
-                'message' => 'Terjadi kesalahan saat memproses data ke database: ' . $e->getMessage(),
+                'message' => 'Terjadi kesalahan saat memproses data ke database: '.$e->getMessage(),
             ], 500);
         }
     }

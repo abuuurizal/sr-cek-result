@@ -22,11 +22,11 @@ class ValidateSyncApiKey
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        $providedKey = $request->header('X-API-KEY') 
-            ?? $request->bearerToken() 
+        $providedKey = $request->header('X-API-KEY')
+            ?? $request->bearerToken()
             ?? $request->input('api_key');
 
-        if (!$providedKey || !hash_equals($expectedKey, (string) $providedKey)) {
+        if (! $providedKey || ! hash_equals($expectedKey, (string) $providedKey)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Unauthorized. Invalid or missing API Key.',

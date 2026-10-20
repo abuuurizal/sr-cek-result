@@ -15,6 +15,7 @@ class Participant extends Model
     protected $table = 'paticipants';
 
     protected $fillable = [
+        'mylaps_code',
         'chip_code',
         'no_bib',
         'nama_lengkap',
@@ -43,8 +44,9 @@ class Participant extends Model
 
         return $query->where(function ($q) use ($term) {
             $q->where('no_bib', 'like', "%{$term}%")
-              ->orWhere('nama_lengkap', 'like', "%{$term}%")
-              ->orWhere('chip_code', 'like', "%{$term}%");
+                ->orWhere('nama_lengkap', 'like', "%{$term}%")
+                ->orWhere('mylaps_code', 'like', "%{$term}%")
+                ->orWhere('chip_code', 'like', "%{$term}%");
         });
     }
 

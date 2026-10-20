@@ -37,6 +37,7 @@ class SyncApiTest extends TestCase
             'participants' => [
                 [
                     'no_bib' => '7796',
+                    'mylaps_code' => 'MYLAPS-001',
                     'chip_code' => 'CHIP-7796',
                     'nama_lengkap' => 'Budi Finisher',
                     'gender' => 'Male',
@@ -49,13 +50,14 @@ class SyncApiTest extends TestCase
                 ],
                 [
                     'no_bib' => '7797',
+                    'mylaps_code' => 'MYLAPS-002',
                     'chip_code' => 'CHIP-7797',
                     'nama_lengkap' => 'Siti Runner',
                     'gender' => 'Female',
                     'kategori' => '5K',
                     'status' => 'dns',
-                ]
-            ]
+                ],
+            ],
         ];
 
         $response = $this->withHeader('X-API-KEY', 'sr-sync-secret-key-2026')
@@ -69,6 +71,7 @@ class SyncApiTest extends TestCase
 
         $this->assertDatabaseHas('paticipants', [
             'no_bib' => '7796',
+            'mylaps_code' => 'MYLAPS-001',
             'nama_lengkap' => 'Budi Finisher',
             'status' => 'finished',
             'chip_time' => '00:45:00',
@@ -84,6 +87,7 @@ class SyncApiTest extends TestCase
     {
         Participant::create([
             'no_bib' => '8899',
+            'mylaps_code' => 'MY-8899',
             'chip_code' => 'CP8899',
             'nama_lengkap' => 'Agus Pelari',
             'kategori' => '10K',
@@ -94,6 +98,11 @@ class SyncApiTest extends TestCase
         $response = $this->getJson('/api/v1/participants/8899');
         $response->assertStatus(200)
             ->assertJsonPath('data.nama_lengkap', 'Agus Pelari');
+
+        // Also test search via mylaps_code
+        $responseMylaps = $this->getJson('/api/v1/participants/MY-8899');
+        $responseMylaps->assertStatus(200)
+            ->assertJsonPath('data.no_bib', '8899');
 
         $webResponse = $this->get('/?q=Agus');
         $webResponse->assertStatus(200)

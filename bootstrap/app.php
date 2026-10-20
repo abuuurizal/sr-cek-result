@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\ValidateSyncApiKey;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -14,7 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
-            'sync.api_key' => \App\Http\Middleware\ValidateSyncApiKey::class,
+            'sync.api_key' => ValidateSyncApiKey::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

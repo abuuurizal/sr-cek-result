@@ -5,7 +5,8 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
@@ -43,7 +44,7 @@ return new class extends Migration {
                 return in_array('no_bib', $index['columns']) && $index['unique'];
             });
 
-            if (!$hasUniqueBib) {
+            if (! $hasUniqueBib) {
                 Schema::table('paticipants', function (Blueprint $table) {
                     $table->unique('no_bib', 'paticipants_no_bib_unique');
                 });
